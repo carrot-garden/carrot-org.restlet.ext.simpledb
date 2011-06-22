@@ -50,20 +50,20 @@ public class AWSCredentialsLoader implements AWSCredentials {
 
 		try {
 			return loadSystemProperties();
-		} catch (Exception e) {
-			log("failed to loadSystemProperties : " + e.getMessage());
+		} catch (Throwable e) {
+			log("loadSystemProperties : " + e.getMessage());
 		}
 
 		try {
 			return loadFileProperties();
-		} catch (Exception e) {
-			log("failed to loadFileProperties : " + e.getMessage());
+		} catch (Throwable e) {
+			log("loadFileProperties : " + e.getMessage());
 		}
 
 		try {
 			return loadEnvironmentProperties();
-		} catch (Exception e) {
-			log("failed to loadEnvironmentProperties : " + e.getMessage());
+		} catch (Throwable e) {
+			log("loadEnvironmentProperties : " + e.getMessage());
 		}
 
 		throw new Exception("failed to load aws credentials");
@@ -98,13 +98,13 @@ public class AWSCredentialsLoader implements AWSCredentials {
 		String id = properties.getProperty(PROP_AWS_ID);
 		if (isInvalid(id)) {
 			throw new Exception(//
-					"system property missing : " + PROP_AWS_ID);
+					"file property missing : " + PROP_AWS_ID);
 		}
 
 		String secret = properties.getProperty(PROP_AWS_SECRET);
 		if (isInvalid(secret)) {
 			throw new Exception(//
-					"system property missing : " + PROP_AWS_SECRET);
+					"file property missing : " + PROP_AWS_SECRET);
 		}
 
 		return new AWSCredentialsLoader(id, secret);
