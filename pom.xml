@@ -23,6 +23,7 @@
 
 	<properties>
 		<restletVersion>2.1-M4</restletVersion>
+		<amazonVersion>1.2.1</amazonVersion>
 	</properties>
 
 	<dependencies>
@@ -32,6 +33,12 @@
 			<artifactId>org.restlet</artifactId>
 			<version>${restletVersion}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>${amazonVersion}</version>
 		</dependency>
 
 	</dependencies>
