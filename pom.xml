@@ -39,6 +39,7 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
 			<version>${amazonVersion}</version>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>
