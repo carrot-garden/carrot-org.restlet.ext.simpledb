@@ -4,6 +4,7 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.ext.simpledb.auth.AWSCredentialsLoader;
 import org.restlet.ext.simpledb.name.Name;
+import org.restlet.ext.simpledb.resource.RegionServerResource;
 import org.restlet.ext.simpledb.resource.RootResource;
 import org.restlet.routing.Router;
 
@@ -32,6 +33,8 @@ public class RegionApp extends Application {
 		Router router = new Router(getContext());
 
 		router.attach(Name.NONE, RootResource.class);
+
+		router.attach(Name.REGION, RegionServerResource.class);
 
 		return router;
 
