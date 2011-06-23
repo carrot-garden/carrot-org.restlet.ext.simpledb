@@ -10,11 +10,11 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 
-public class SimpleDbApp extends Application {
+public class DomainApp extends Application {
 
 	private AmazonSimpleDB sdb;
 
-	public SimpleDbApp() {
+	public DomainApp() {
 
 		try {
 			AWSCredentials creds = AWSCredentialsLoader.load();

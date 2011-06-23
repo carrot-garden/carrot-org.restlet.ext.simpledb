@@ -4,11 +4,11 @@ regions:
 
 ######################
 
-platform-accounts/accountId/account?shardId=accountId&shardBits=3
+platform-accounts/accountId/account
 
-platform-profiles/accountId:profileId/profile?shardId=accountId&shardBits=3
+platform-profiles/accountId|profileId/profile
 
-platform-preferences/accountId:profileId:preferenceId/preference?shardId=accountId&shardBits=5
+platform-preferences/accountId|profileId|preferenceId/preference
 
 ######################
 
