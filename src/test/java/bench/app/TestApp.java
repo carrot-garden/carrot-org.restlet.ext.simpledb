@@ -1,4 +1,4 @@
-package bench.access;
+package bench.app;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 import com.amazonaws.services.simpledb.model.ListDomainsResult;
 
-public class TestAccess {
+public class TestApp {
 
 	private static void log(String text) {
 		System.err.println(text);
@@ -21,9 +21,9 @@ public class TestAccess {
 
 		AmazonSimpleDB sdb = new AmazonSimpleDBClient(creds);
 
-		ListDomainsResult result = sdb.listDomains();
+		ListDomainsResult listResult = sdb.listDomains();
 
-		List<String> names = result.getDomainNames();
+		List<String> names = listResult.getDomainNames();
 		for (String name : names) {
 			log("name : " + name);
 		}

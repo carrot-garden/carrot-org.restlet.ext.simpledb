@@ -1,4 +1,4 @@
-package bench.access;
+package bench.auth;
 
 /*
  * Copyright 2010-2011 Amazon.com, Inc. or its affiliates. All Rights Reserved.

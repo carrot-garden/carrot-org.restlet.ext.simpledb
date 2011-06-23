@@ -1,0 +1,17 @@
+
+
+regions:
+
+######################
+
+platform-accounts/accountId/account?shardId=accountId&shardBits=3
+
+platform-profiles/accountId:profileId/profile?shardId=accountId&shardBits=3
+
+platform-preferences/accountId:profileId:preferenceId/preference?shardId=accountId&shardBits=5
+
+######################
+
+platform-database/accountId:/account
+platform-database/accountId:profileId/profile
+
