@@ -21,18 +21,20 @@ public class TestShardUtil {
 
 		int size = array.length;
 
-		int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, avg = 0;
+		int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, sum = 0;
 
 		for (int k = 0; k < size; k++) {
 			int val = array[k];
 			min = Math.min(min, val);
 			max = Math.max(max, val);
-			avg = (avg + val) / 2;
+			sum += val;
 		}
 
 		int range = max - min;
 
-		log.debug("average : {}  range : {}", avg, range);
+		int averge = sum / size;
+
+		log.debug("average : {}  range : {}", averge, range);
 
 	}
 
@@ -83,7 +85,7 @@ public class TestShardUtil {
 
 	public static void main(String... args) {
 
-		for (int k = 0; k < 10; k++) {
+		for (int k = 0; k < 3; k++) {
 			log.debug("##############");
 			testGetShardIndexJOATT();
 			testGetShardIndexDJB2();

@@ -4,8 +4,8 @@ import java.nio.charset.Charset;
 
 public class ShardUtil {
 
-	private static final long MIN_HASH = Integer.MIN_VALUE;
-	private static final long HASH_RANGE = Integer.MAX_VALUE - MIN_HASH;
+	private static final long HASH_MINIM = Integer.MIN_VALUE;
+	private static final long HASH_RANGE = Integer.MAX_VALUE - HASH_MINIM;
 
 	public static int getShardIndex(String itemName, int shardCount) {
 		return getShardIndexJOATT(itemName, shardCount);
@@ -20,7 +20,7 @@ public class ShardUtil {
 
 		long shardRange = HASH_RANGE / shardCount;
 		long hash = hashCodeJOATT(itemName);
-		long absoluteHash = hash - MIN_HASH;
+		long absoluteHash = hash - HASH_MINIM;
 
 		return (int) (absoluteHash / shardRange);
 	}
