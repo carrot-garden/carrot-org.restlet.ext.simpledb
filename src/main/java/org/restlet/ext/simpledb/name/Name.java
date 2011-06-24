@@ -4,7 +4,7 @@ public interface Name {
 
 	interface Id {
 
-		String REGION = "region";
+		String VOLUME = "volume";
 		String ENTRY = "entry";
 
 		String DOMAIN = "domain";
@@ -17,23 +17,24 @@ public interface Name {
 
 	String ROOT = "/";
 
-	// via domain sharding
+	//
 
-	/** first part of composite id used for sharding */
-	String COMPOSITE_ID_SEPARATOR = "|";
+	// volume is a collection of domain shards
 
-	String REGIONS = //
-	"/regions";
+	String VOLUMES = //
+	"/volumes";
 
-	String REGION = //
-	"/regions/{region}";
+	String VOLUME = //
+	"/volumes/{volume}";
 
 	String ENTRIES = //
-	"/regions/{region}/entries";
+	"/volumes/{volume}/entries";
 
-	/* {entry} == firstId|secondId|thirdId */
+	/* {entry} == firstId|secondId|thirdId|xxxxxxId */
 	String ENTRY = //
-	"/regions/{region}/entries/{entry}";
+	"/volumes/{volume}/entries/{entry}";
+
+	//
 
 	// via direct domain access
 

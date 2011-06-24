@@ -1,6 +1,6 @@
 package org.restlet.ext.simpledb.api;
 
-public interface Region<E> {
+public interface Volume<E> {
 
 	String getRegionId();
 

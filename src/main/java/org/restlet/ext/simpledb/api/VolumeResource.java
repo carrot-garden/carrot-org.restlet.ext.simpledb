@@ -4,15 +4,15 @@ import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Put;
 
-public interface RegionsResource<E> {
+public interface VolumeResource<E> {
 
 	@Get("json")
-	public Region<E> load();
+	public Volume<E> load();
 
 	@Put("json")
-	public void save(Region<E> region);
+	public void save(Volume<E> region);
 
 	@Delete("json")
-	public void remove(Region<E> region);
+	public void remove(Volume<E> region);
 
 }

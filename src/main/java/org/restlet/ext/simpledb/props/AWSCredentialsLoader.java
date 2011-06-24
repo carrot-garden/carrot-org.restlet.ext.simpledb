@@ -1,4 +1,4 @@
-package org.restlet.ext.simpledb.auth;
+package org.restlet.ext.simpledb.props;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

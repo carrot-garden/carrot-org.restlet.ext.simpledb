@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.restlet.ext.simpledb.auth.AWSCredentialsLoader;
+import org.restlet.ext.simpledb.props.AWSCredentialsLoader;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;

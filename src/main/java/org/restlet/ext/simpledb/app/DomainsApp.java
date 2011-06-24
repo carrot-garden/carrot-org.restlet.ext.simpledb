@@ -2,7 +2,7 @@ package org.restlet.ext.simpledb.app;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
-import org.restlet.ext.simpledb.auth.AWSCredentialsLoader;
+import org.restlet.ext.simpledb.props.AWSCredentialsLoader;
 import org.restlet.ext.simpledb.resource.RootResource;
 import org.restlet.routing.Router;
 
@@ -10,11 +10,11 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 
-public class DomainApp extends Application {
+public class DomainsApp extends Application {
 
 	private AmazonSimpleDB sdb;
 
-	public DomainApp() {
+	public DomainsApp() {
 
 		try {
 			AWSCredentials creds = AWSCredentialsLoader.load();

@@ -2,25 +2,33 @@ package org.restlet.ext.simpledb.app;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
-import org.restlet.ext.simpledb.auth.AWSCredentialsLoader;
 import org.restlet.ext.simpledb.name.Name;
-import org.restlet.ext.simpledb.resource.RegionServerResource;
+import org.restlet.ext.simpledb.props.AWSCredentialsLoader;
+import org.restlet.ext.simpledb.props.SDBProperties;
+import org.restlet.ext.simpledb.props.SDBPropertiesLoader;
 import org.restlet.ext.simpledb.resource.RootResource;
+import org.restlet.ext.simpledb.resource.VolumeServerResource;
 import org.restlet.routing.Router;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 
-public class RegionApp extends Application {
+public class VolumesApp extends Application {
 
-	private AmazonSimpleDB sdb;
+	private final SDBProperties sdbProps;
 
-	public RegionApp() {
+	private final AmazonSimpleDB sdbClient;
+
+	public VolumesApp() {
 
 		try {
+
+			sdbProps = SDBPropertiesLoader.load();
+
 			AWSCredentials creds = AWSCredentialsLoader.load();
-			sdb = new AmazonSimpleDBClient(creds);
+			sdbClient = new AmazonSimpleDBClient(creds);
+
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -34,7 +42,7 @@ public class RegionApp extends Application {
 
 		router.attach(Name.NONE, RootResource.class);
 
-		router.attach(Name.REGION, RegionServerResource.class);
+		router.attach(Name.VOLUME, VolumeServerResource.class);
 
 		return router;
 
