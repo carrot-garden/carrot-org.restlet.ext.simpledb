@@ -8,6 +8,7 @@ import com.carrotgarden.utils.json.JSON;
 public class VolumeBean extends DomainBean implements Volume {
 
 	public static final String PROP_PREFIX = "domain.prefix";
+	public static final String PROP_SEPARATOR = "domain.separator";
 	public static final String PROP_COUNT = "domain.count";
 	public static final String PROP_ACTIVE = "is.active";
 	public static final String PROP_URI_ID = "uri.id";
@@ -16,6 +17,9 @@ public class VolumeBean extends DomainBean implements Volume {
 
 	@JsonProperty(PROP_PREFIX)
 	private String domainPrefix;
+
+	@JsonProperty(PROP_SEPARATOR)
+	private String domainSeparator;
 
 	@JsonProperty(PROP_COUNT)
 	private int domainCount;
@@ -38,6 +42,11 @@ public class VolumeBean extends DomainBean implements Volume {
 	@Override
 	public String getDomainPrefix() {
 		return domainPrefix;
+	}
+
+	@Override
+	public String getDomainSeparator() {
+		return domainSeparator;
 	}
 
 	@Override

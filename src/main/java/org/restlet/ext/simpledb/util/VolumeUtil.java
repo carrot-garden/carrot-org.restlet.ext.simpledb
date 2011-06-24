@@ -10,9 +10,11 @@ public class VolumeUtil {
 
 		int count = volume.getDomainCount();
 
+		String separator = volume.getDomainSeparator();
+
 		int index = ShardUtil.getShardIndex(item, count);
 
-		String domain = prefix + "|" + index;
+		String domain = prefix + separator + index;
 
 		return domain;
 

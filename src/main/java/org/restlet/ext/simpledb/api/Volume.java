@@ -4,6 +4,8 @@ public interface Volume extends Domain {
 
 	String getDomainPrefix();
 
+	String getDomainSeparator();
+
 	int getDomainCount();
 
 	boolean isActive();
