@@ -1,11 +1,15 @@
 package org.restlet.ext.simpledb.app;
 
+import java.util.List;
+
 import org.restlet.Application;
 import org.restlet.Restlet;
+import org.restlet.ext.simpledb.api.Volume;
+import org.restlet.ext.simpledb.bean.VolumeBean;
 import org.restlet.ext.simpledb.name.Name;
 import org.restlet.ext.simpledb.props.SDBProperties;
 import org.restlet.ext.simpledb.props.SDBPropertiesLoader;
-import org.restlet.ext.simpledb.props.SDBRestletProperties;
+import org.restlet.ext.simpledb.props.SDBVolumesProperties;
 import org.restlet.ext.simpledb.resource.RootResource;
 import org.restlet.ext.simpledb.resource.VolumeServerResource;
 import org.restlet.ext.simpledb.util.SimpleUtil;
@@ -42,13 +46,21 @@ public class VolumesApp extends Application {
 
 	private void configureVolumes() throws Exception {
 
-		String configDomain = sdbProps.getSDBConfigDomain();
-		String restletProperties = SDBRestletProperties.ITEM_RESTLET_PROPS;
+		String domain = sdbProps.getSDBConfigDomain();
+		String propsItem = SDBVolumesProperties.ITEM_VOLUMES_PROPS;
 
-		SDBRestletProperties props = SimpleUtil.fromDomainItem(sdbClient,
-				configDomain, restletProperties, SDBRestletProperties.class);
+		SDBVolumesProperties props = SimpleUtil.getObject(//
+				sdbClient, domain, propsItem, SDBVolumesProperties.class);
 
 		log.debug("props : {}", props);
+
+		String prefix = props.getVolumePrefix() + props.getVolumeSeparator();
+		List<VolumeBean> volumeItems = SimpleUtil.getItems(sdbClient, domain,
+				prefix, VolumeBean.class);
+
+		for (Volume volume : volumeItems) {
+			log.debug("volume : {}", volume);
+		}
 
 	}
 

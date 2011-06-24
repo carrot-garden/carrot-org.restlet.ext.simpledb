@@ -4,9 +4,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.carrotgarden.utils.json.JSON;
 
-public class SDBRestletProperties {
+public class SDBVolumesProperties {
 
-	public static final String ITEM_RESTLET_PROPS = "restlet.properties";
+	public static final String ITEM_VOLUMES_PROPS = "volumes.properties";
 
 	public static final String PROP_VOLUME = "volume.prefix";
 	public static final String PROP_SEPARATOR = "volume.separator";

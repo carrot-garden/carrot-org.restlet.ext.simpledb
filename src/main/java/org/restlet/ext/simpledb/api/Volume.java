@@ -1,17 +1,13 @@
 package org.restlet.ext.simpledb.api;
 
-public interface Volume<E> {
+public interface Volume extends Domain {
 
 	String getDomainPrefix();
 
 	int getDomainCount();
 
-	//
+	boolean isActive();
 
-	E load(String entryId);
-
-	void save(String entryId, E entry);
-
-	void remove(String entryId);
+	String getUriId();
 
 }

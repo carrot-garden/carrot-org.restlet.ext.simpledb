@@ -7,12 +7,12 @@ import org.restlet.resource.Put;
 public interface VolumesResource<E> {
 
 	@Get("json")
-	public Volume<E> load();
+	public Volume load();
 
 	@Put("json")
-	public void save(Volume<E> region);
+	public void save(Volume volume);
 
 	@Delete("json")
-	public void remove(Volume<E> region);
+	public void remove(Volume volume);
 
 }

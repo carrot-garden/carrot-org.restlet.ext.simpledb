@@ -4,11 +4,11 @@ import java.util.List;
 
 public interface Volumes {
 
-	Volume<?> load(String volumeId);
+	Volume load(String volumeId);
 
-	List<String> listVolumeIds();
+	List<Volume> listVolumes();
 
-	Volume<?> create(String volumeId, int shardCount);
+	Volume create(String volumeId, int domainCount);
 
 	void delete(String volumeId);
 
