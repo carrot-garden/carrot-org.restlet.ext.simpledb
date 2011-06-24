@@ -2,6 +2,7 @@ package org.restlet.ext.simpledb.app;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
+import org.restlet.ext.simpledb.name.Name;
 import org.restlet.ext.simpledb.resource.RootResource;
 import org.restlet.routing.Router;
 
@@ -31,7 +32,7 @@ public class DomainsApp extends Application {
 
 		Router router = new Router(getContext());
 
-		router.attach("", RootResource.class);
+		router.attach(Name.NONE, RootResource.class);
 
 		return router;
 

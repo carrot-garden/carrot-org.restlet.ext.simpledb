@@ -11,7 +11,8 @@ import org.restlet.ext.simpledb.props.SDBProperties;
 import org.restlet.ext.simpledb.props.SDBPropertiesLoader;
 import org.restlet.ext.simpledb.props.SDBVolumesProperties;
 import org.restlet.ext.simpledb.resource.RootResource;
-import org.restlet.ext.simpledb.resource.VolumeServerResource;
+import org.restlet.ext.simpledb.resource.VolumeMap;
+import org.restlet.ext.simpledb.resource.VolumeSR;
 import org.restlet.ext.simpledb.util.SimpleUtil;
 import org.restlet.ext.simpledb.util.VolumeUtil;
 import org.restlet.routing.Router;
@@ -25,8 +26,9 @@ public class VolumesApp extends Application {
 
 	private static final Logger log = LoggerFactory.getLogger(VolumesApp.class);
 
-	private final SDBProperties sdbProps;
+	private final VolumeMap volumeMap = new VolumeMap();
 
+	private final SDBProperties sdbProps;
 	private final AmazonSimpleDB sdbClient;
 
 	public VolumesApp() {
@@ -64,6 +66,7 @@ public class VolumesApp extends Application {
 			if (volume.isActive()) {
 				log.debug("volume : {}", volume);
 				VolumeUtil.makeDomains(sdbClient, volume);
+				volumeMap.put(volume.getUriId(), volume);
 			}
 		}
 
@@ -76,7 +79,7 @@ public class VolumesApp extends Application {
 
 		router.attach(Name.NONE, RootResource.class);
 
-		router.attach(Name.VOLUME, VolumeServerResource.class);
+		router.attach(Name.VOLUME, VolumeSR.class);
 
 		return router;
 
