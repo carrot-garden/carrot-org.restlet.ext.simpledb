@@ -13,6 +13,7 @@ import org.restlet.ext.simpledb.props.SDBVolumesProperties;
 import org.restlet.ext.simpledb.resource.RootResource;
 import org.restlet.ext.simpledb.resource.VolumeServerResource;
 import org.restlet.ext.simpledb.util.SimpleUtil;
+import org.restlet.ext.simpledb.util.VolumeUtil;
 import org.restlet.routing.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +55,16 @@ public class VolumesApp extends Application {
 
 		log.debug("props : {}", props);
 
-		String prefix = props.getVolumePrefix() + props.getVolumeSeparator();
-		List<VolumeBean> volumeItems = SimpleUtil.getItems(sdbClient, domain,
+		String prefix = props.getSearchPrefix();
+
+		List<VolumeBean> volumeList = SimpleUtil.getItems(sdbClient, domain,
 				prefix, VolumeBean.class);
 
-		for (Volume volume : volumeItems) {
-			log.debug("volume : {}", volume);
+		for (Volume volume : volumeList) {
+			if (volume.isActive()) {
+				log.debug("volume : {}", volume);
+				VolumeUtil.makeDomains(sdbClient, volume);
+			}
 		}
 
 	}

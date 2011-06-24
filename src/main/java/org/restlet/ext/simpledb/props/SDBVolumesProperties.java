@@ -26,6 +26,10 @@ public class SDBVolumesProperties {
 		return JSON.intoText(this);
 	}
 
+	public String getSearchPrefix() {
+		return getVolumePrefix() + getVolumeSeparator();
+	}
+
 	//
 
 	public String getVolumePrefix() {

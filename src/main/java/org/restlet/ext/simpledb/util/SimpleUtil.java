@@ -13,6 +13,7 @@ import com.amazonaws.services.simpledb.model.CreateDomainRequest;
 import com.amazonaws.services.simpledb.model.GetAttributesRequest;
 import com.amazonaws.services.simpledb.model.GetAttributesResult;
 import com.amazonaws.services.simpledb.model.Item;
+import com.amazonaws.services.simpledb.model.ListDomainsResult;
 import com.amazonaws.services.simpledb.model.SelectRequest;
 import com.amazonaws.services.simpledb.model.SelectResult;
 import com.carrotgarden.utils.json.JSON;
@@ -141,6 +142,14 @@ public class SimpleUtil {
 
 	public static void makeDomain(AmazonSimpleDB client, String domain)
 			throws Exception {
+
+		ListDomainsResult result = client.listDomains();
+
+		List<String> nameList = result.getDomainNames();
+
+		if (nameList.contains(domain)) {
+			return;
+		}
 
 		CreateDomainRequest request = new CreateDomainRequest(domain);
 
