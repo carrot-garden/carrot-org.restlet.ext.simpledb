@@ -2,9 +2,9 @@ package org.restlet.ext.simpledb.api;
 
 public interface Volume<E> {
 
-	String getRegionId();
+	String getDomainPrefix();
 
-	int getRegionShardCount();
+	int getDomainCount();
 
 	//
 

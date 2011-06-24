@@ -1,10 +1,10 @@
-package org.restlet.ext.simpledb.props;
+package org.restlet.ext.simpledb.util;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class PropsLoader {
+public class PropsUtil {
 
 	public static boolean isInvalid(String value) {
 		return value == null || value.length() == 0;
@@ -71,8 +71,11 @@ public class PropsLoader {
 
 	public static Properties fromClassPath(String classPath) throws Exception {
 		Properties properties = new Properties();
-		ClassLoader loader = PropsLoader.class.getClassLoader();
+		ClassLoader loader = PropsUtil.class.getClassLoader();
 		InputStream input = loader.getResourceAsStream(classPath);
+		if (input == null) {
+			throw new Exception(classPath + " (No such resource)");
+		}
 		properties.load(input);
 		input.close();
 		return properties;

@@ -1,4 +1,4 @@
-package org.restlet.ext.simpledb.props;
+package bench.auth;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

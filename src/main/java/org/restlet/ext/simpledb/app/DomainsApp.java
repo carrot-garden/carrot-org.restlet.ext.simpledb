@@ -2,9 +2,10 @@ package org.restlet.ext.simpledb.app;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
-import org.restlet.ext.simpledb.props.AWSCredentialsLoader;
 import org.restlet.ext.simpledb.resource.RootResource;
 import org.restlet.routing.Router;
+
+import bench.auth.AWSCredentialsLoader;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
