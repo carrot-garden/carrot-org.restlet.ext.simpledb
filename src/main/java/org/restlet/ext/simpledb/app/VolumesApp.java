@@ -10,6 +10,7 @@ import org.restlet.ext.simpledb.name.Name;
 import org.restlet.ext.simpledb.props.SDBProperties;
 import org.restlet.ext.simpledb.props.SDBPropertiesLoader;
 import org.restlet.ext.simpledb.props.SDBVolumesProperties;
+import org.restlet.ext.simpledb.resource.EntryRestlet;
 import org.restlet.ext.simpledb.resource.RootResource;
 import org.restlet.ext.simpledb.resource.VolumeMap;
 import org.restlet.ext.simpledb.resource.VolumeSR;
@@ -80,6 +81,8 @@ public class VolumesApp extends Application {
 		router.attach(Name.NONE, RootResource.class);
 
 		router.attach(Name.VOLUME, VolumeSR.class);
+
+		router.attach(Name.ENTRY, new EntryRestlet(sdbClient, volumeMap));
 
 		return router;
 

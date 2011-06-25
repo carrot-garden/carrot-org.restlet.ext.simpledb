@@ -58,6 +58,10 @@ public class SimpleUtil {
 
 		Map<String, String> props = getMap(client, domain, item);
 
+		if (props.isEmpty()) {
+			return null;
+		}
+
 		String json = JSON.intoText(props);
 
 		return json;

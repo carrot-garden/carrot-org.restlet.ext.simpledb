@@ -9,6 +9,18 @@ import com.amazonaws.services.simpledb.AmazonSimpleDB;
 
 public class VolumeUtil {
 
+	public static String getPrefix(String entryId) {
+
+		int index = entryId.indexOf("|");
+
+		if (index <= 0) {
+			return entryId;
+		} else {
+			return entryId.substring(index);
+		}
+
+	}
+
 	public static String getDomain(Volume volume, int index) {
 
 		String prefix = volume.getDomainPrefix();
