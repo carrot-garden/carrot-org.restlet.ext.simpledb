@@ -56,7 +56,7 @@ public class SimpleUtil {
 	public static String getJson(AmazonSimpleDB client, String domain,
 			String item) throws Exception {
 
-		Map<String, String> props = getMap(client, domain, item);
+		Map<String, Object> props = getMap(client, domain, item);
 
 		if (props.isEmpty()) {
 			return null;
@@ -68,7 +68,7 @@ public class SimpleUtil {
 
 	}
 
-	public static Map<String, String> getMap(AmazonSimpleDB client,
+	public static Map<String, Object> getMap(AmazonSimpleDB client,
 			String domain, String item) throws Exception {
 
 		GetAttributesRequest request = new GetAttributesRequest(//
@@ -78,31 +78,53 @@ public class SimpleUtil {
 
 		List<Attribute> attributes = result.getAttributes();
 
-		Map<String, String> props = getMap(attributes);
+		Map<String, Object> props = getMap(attributes);
 
 		return props;
 
 	}
 
-	public static Map<String, String> getMap(Item item) throws Exception {
+	public static Map<String, Object> getMap(Item item) throws Exception {
 
 		List<Attribute> attributes = item.getAttributes();
 
-		Map<String, String> props = getMap(attributes);
+		Map<String, Object> props = getMap(attributes);
 
 		return props;
 
 	}
 
-	public static Map<String, String> getMap(List<Attribute> attributes)
+	@SuppressWarnings("unchecked")
+	public static Map<String, Object> getMap(List<Attribute> attributes)
 			throws Exception {
 
-		Map<String, String> props = new HashMap<String, String>();
+		Map<String, Object> props = new HashMap<String, Object>();
 
 		for (Attribute attrib : attributes) {
+
 			String key = attrib.getName();
 			String value = attrib.getValue();
-			props.put(key, value);
+
+			Object stored = props.get(key);
+
+			if (stored == null) {
+				props.put(key, value);
+				continue;
+			}
+
+			if (stored instanceof String) {
+				List<String> list = new LinkedList<String>();
+				list.add((String) stored);
+				list.add(value);
+				props.put(key, list);
+				continue;
+			}
+
+			if (stored instanceof List) {
+				List<String> list = (List<String>) stored;
+				list.add(value);
+				continue;
+			}
 
 		}
 
@@ -113,7 +135,7 @@ public class SimpleUtil {
 	public static <T> T getObject(AmazonSimpleDB client, String domain,
 			String item, Class<T> klaz) throws Exception {
 
-		Map<String, String> props = getMap(client, domain, item);
+		Map<String, Object> props = getMap(client, domain, item);
 
 		T value = getObject(props, klaz);
 
@@ -125,7 +147,7 @@ public class SimpleUtil {
 
 		List<Attribute> attributes = item.getAttributes();
 
-		Map<String, String> props = getMap(attributes);
+		Map<String, Object> props = getMap(attributes);
 
 		T object = getObject(props, klaz);
 
@@ -133,7 +155,7 @@ public class SimpleUtil {
 
 	}
 
-	public static <T> T getObject(Map<String, String> props, Class<T> klaz)
+	public static <T> T getObject(Map<String, Object> props, Class<T> klaz)
 			throws Exception {
 
 		ObjectMapper mapper = JSON.getInstance();

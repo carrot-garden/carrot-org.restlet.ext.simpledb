@@ -30,7 +30,7 @@ public interface Name {
 	String ENTRIES = //
 	"/volumes/{volume}/entries";
 
-	/* {entry} == firstId|secondId|thirdId|nnnnnnId */
+	/* {entry} == prefixId|nnnnnnId */
 	String ENTRY = //
 	"/volumes/{volume}/entries/{entry}";
 

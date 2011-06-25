@@ -44,34 +44,42 @@ public class EntryRestlet extends Restlet {
 				log.debug("get");
 
 				String volumeId = RestletUtil.getAttr(request, Name.Id.VOLUME);
+				if (volumeId == null) {
+					response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST,
+							"missing volume attribute");
+					return;
+				}
+
+				String entryId = RestletUtil.getAttr(request, Name.Id.ENTRY);
+				if (entryId == null) {
+					response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST,
+							"missing entry attribute");
+					return;
+				}
 
 				Volume volume = volumeMap.get(volumeId);
-
 				if (volume == null) {
-					response.setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+					response.setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE,
+							"volume not found / not active");
 					return;
 				}
 
-				String item = RestletUtil.getAttr(request, Name.Id.ENTRY);
-				log.debug("item : {}", item);
-
-				String prefix = VolumeUtil.getPrefix(item);
-				log.debug("prefix : {}", prefix);
+				String prefix = VolumeUtil.getPrefix(volume, entryId);
 
 				String domain = VolumeUtil.getDomain(volume, prefix);
-				log.debug("domain : {}", domain);
 
-				String json = SimpleUtil.getJson(sdbClient, domain, item);
+				String json = SimpleUtil.getJson(sdbClient, domain, entryId);
 				if (json == null) {
-					response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+					response.setStatus(Status.CLIENT_ERROR_NOT_FOUND,
+							"entry not found");
 					return;
 				}
-
-				log.debug("json : {}", json);
 
 				MediaType mediaType = MediaType.APPLICATION_JSON;
 
 				response.setEntity(json, mediaType);
+
+				response.setStatus(Status.SUCCESS_OK);
 
 			} catch (Exception e) {
 

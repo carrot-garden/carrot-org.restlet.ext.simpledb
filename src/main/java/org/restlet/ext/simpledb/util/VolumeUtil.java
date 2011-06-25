@@ -9,9 +9,11 @@ import com.amazonaws.services.simpledb.AmazonSimpleDB;
 
 public class VolumeUtil {
 
-	public static String getPrefix(String entryId) {
+	public static String getPrefix(Volume volume, String entryId) {
 
-		int index = entryId.indexOf("|");
+		String separator = volume.getDomainSeparator();
+
+		int index = entryId.indexOf(separator);
 
 		if (index <= 0) {
 			return entryId;
