@@ -4,6 +4,8 @@ public interface Name {
 
 	interface Id {
 
+		String COUNTER = "counter";
+
 		String VOLUME = "volume";
 		String ENTRY = "entry";
 
@@ -16,6 +18,13 @@ public interface Name {
 	String NONE = "";
 
 	String ROOT = "/";
+
+	//
+
+	String COUNTERS = //
+	"/counters";
+	String COUNTER = //
+	"/counters/{counter}";
 
 	//
 

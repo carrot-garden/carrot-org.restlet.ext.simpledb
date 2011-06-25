@@ -72,7 +72,7 @@ public class SimpleUtil {
 			String domain, String item) throws Exception {
 
 		GetAttributesRequest request = new GetAttributesRequest(//
-				domain, item);
+				domain, item).withConsistentRead(true);
 
 		GetAttributesResult result = client.getAttributes(request);
 
