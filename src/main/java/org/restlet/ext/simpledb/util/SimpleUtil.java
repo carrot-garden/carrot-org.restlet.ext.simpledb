@@ -10,12 +10,16 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.model.Attribute;
 import com.amazonaws.services.simpledb.model.CreateDomainRequest;
+import com.amazonaws.services.simpledb.model.DeleteAttributesRequest;
 import com.amazonaws.services.simpledb.model.GetAttributesRequest;
 import com.amazonaws.services.simpledb.model.GetAttributesResult;
 import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.ListDomainsResult;
+import com.amazonaws.services.simpledb.model.PutAttributesRequest;
+import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.amazonaws.services.simpledb.model.SelectRequest;
 import com.amazonaws.services.simpledb.model.SelectResult;
+import com.amazonaws.services.simpledb.model.UpdateCondition;
 import com.carrotgarden.utils.json.JSON;
 
 public class SimpleUtil {
@@ -27,7 +31,8 @@ public class SimpleUtil {
 				+ " where itemName() like " + value(prefix + "%")
 				+ " limit 2500 ";
 
-		SelectRequest request = new SelectRequest(expression);
+		SelectRequest request = new SelectRequest(expression)
+				.withConsistentRead(true);
 
 		SelectResult result = client.select(request);
 
@@ -126,6 +131,8 @@ public class SimpleUtil {
 				continue;
 			}
 
+			throw new Exception("unexpected value type : " + stored);
+
 		}
 
 		return props;
@@ -191,6 +198,77 @@ public class SimpleUtil {
 	// http://docs.amazonwebservices.com/AmazonSimpleDB/2009-04-15/DeveloperGuide/index.html?QuotingRulesSelect.html
 	public static String value(String value) {
 		return "'" + value + "'";
+	}
+
+	public static void putMap(Map<String, Object> props, AmazonSimpleDB client,
+			String domain, String item) throws Exception {
+
+		if (props == null) {
+
+			List<Attribute> attributes = null;
+			UpdateCondition condition = null;
+
+			DeleteAttributesRequest request = new DeleteAttributesRequest(
+					domain, item, attributes, condition);
+
+			client.deleteAttributes(request);
+
+		} else {
+
+			List<ReplaceableAttribute> attributes = new LinkedList<ReplaceableAttribute>();
+			putMap(props, attributes);
+
+			UpdateCondition condition = null;
+
+			PutAttributesRequest request = new PutAttributesRequest(domain,
+					item, attributes, condition);
+
+			client.putAttributes(request);
+
+		}
+
+	}
+
+	public static void putEntry(String key, String value,
+			List<ReplaceableAttribute> attributes) {
+
+		ReplaceableAttribute attrib = new ReplaceableAttribute();
+
+		attrib.setName(key);
+		attrib.setValue(value);
+		attrib.setReplace(true); // XXX
+
+		attributes.add(attrib);
+
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	public static void putMap(Map<String, Object> props,
+			List<ReplaceableAttribute> attributes) throws Exception {
+
+		for (Map.Entry<String, Object> entry : props.entrySet()) {
+
+			String key = entry.getKey();
+			Object stored = entry.getValue();
+
+			if (stored instanceof String) {
+				String value = (String) stored;
+				putEntry(key, value, attributes);
+				continue;
+			}
+
+			if (stored instanceof List) {
+				List<String> list = (List<String>) stored;
+				for (String value : list) {
+					putEntry(key, value, attributes);
+				}
+				continue;
+			}
+
+			throw new Exception("unexpected value type : " + stored);
+
+		}
+
 	}
 
 }
