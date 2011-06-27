@@ -8,14 +8,6 @@ import com.carrotgarden.utils.json.JSON;
 
 public class VolumeBean extends DomainBean implements Volume {
 
-	public static final String PROP_FORMAT = "domain_format";
-	public static final String PROP_COUNT = "domain_count";
-	public static final String PROP_SEPARATOR = "name_separator";
-	public static final String PROP_ACTIVE = "is_active";
-	public static final String PROP_URI_ID = "uri_id";
-
-	//
-
 	@JsonProperty(PROP_FORMAT)
 	private String domainFormat;
 

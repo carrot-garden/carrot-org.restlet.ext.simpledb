@@ -13,6 +13,8 @@ public interface Name {
 		String ITEM = "item";
 		String ATTRIBUTE = "attribute";
 
+		String SELECT = "select";
+
 	}
 
 	String NONE = "";
@@ -42,6 +44,11 @@ public interface Name {
 	/* {entry} == prefixId|nnnnnnId */
 	String ENTRY = //
 	"/volumes/{volume}/entries/{entry}";
+
+	//
+
+	String SELECT = //
+	"/volumes/{volume}/select/{select}";
 
 	//
 

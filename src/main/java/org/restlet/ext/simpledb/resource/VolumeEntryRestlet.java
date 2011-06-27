@@ -1,8 +1,8 @@
 package org.restlet.ext.simpledb.resource;
 
+import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
-import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -11,22 +11,15 @@ import org.restlet.ext.simpledb.name.Name;
 import org.restlet.ext.simpledb.util.RestletUtil;
 import org.restlet.ext.simpledb.util.SimpleUtil;
 import org.restlet.representation.Representation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
 
-public class EntryRestlet extends Restlet {
+public class VolumeEntryRestlet extends VolumeBaseRestlet {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(EntryRestlet.class);
+	public VolumeEntryRestlet(Context rstContex, AmazonSimpleDB sdbClient,
+			VolumeMap volumeMap) {
+		super(rstContex, sdbClient, volumeMap);
 
-	private final AmazonSimpleDB client;
-	private final VolumeMap volumes;
-
-	public EntryRestlet(AmazonSimpleDB sdbClient, VolumeMap volumeMap) {
-		this.client = sdbClient;
-		this.volumes = volumeMap;
 	}
 
 	@Override

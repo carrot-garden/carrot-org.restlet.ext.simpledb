@@ -24,8 +24,25 @@ import com.carrotgarden.utils.json.JSON;
 
 public class SimpleUtil {
 
-	public static <T> T convert(Map<String, Object> props, Class<T> klaz)
+	public static String convertProps(Map<String, Object> props)
 			throws Exception {
+
+		if (props == null) {
+			return null;
+		}
+
+		String json = JSON.intoText(props);
+
+		return json;
+
+	}
+
+	public static <T> T convertProps(Map<String, Object> props, Class<T> klaz)
+			throws Exception {
+
+		if (props == null) {
+			return null;
+		}
 
 		ObjectMapper mapper = JSON.getInstance();
 
@@ -35,23 +52,39 @@ public class SimpleUtil {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	public static Map<String, Object> convert(Object instance) throws Exception {
+	public static Map<String, Object> convertInstance(Object instance)
+			throws Exception {
+
+		if (instance == null) {
+			return null;
+		}
 
 		ObjectMapper mapper = JSON.getInstance();
 
+		@SuppressWarnings("unchecked")
 		Map<String, Object> props = mapper.convertValue(instance, Map.class);
 
 		return props;
 
 	}
 
-	public static List<Item> findItems(AmazonSimpleDB client, String domain,
-			String prefix) throws Exception {
+	public static Map<String, Object> convertJson(String json) throws Exception {
 
-		String expression = "select * from " + name(domain)
-				+ " where itemName() like " + value(prefix + "%")
-				+ " limit 2500 ";
+		if (json == null) {
+			return null;
+		}
+
+		@SuppressWarnings("unchecked")
+		Map<String, Object> props = JSON.fromText(json, Map.class);
+
+		return props;
+
+	}
+
+	public static List<Item> selectItems(AmazonSimpleDB client, String domain,
+			String select) throws Exception {
+
+		String expression = "select * from " + name(domain) + " " + select;
 
 		SelectRequest request = new SelectRequest(expression)
 				.withConsistentRead(true);
@@ -67,7 +100,10 @@ public class SimpleUtil {
 	public static <T> List<T> findItems(AmazonSimpleDB client, String domain,
 			String prefix, Class<T> klaz) throws Exception {
 
-		List<Item> itemList = findItems(client, domain, prefix);
+		String select = //
+		"where itemName() like " + value(prefix + "%") + " limit 2500";
+
+		List<Item> itemList = selectItems(client, domain, select);
 
 		List<T> objectList = new LinkedList<T>();
 
@@ -80,16 +116,22 @@ public class SimpleUtil {
 
 	}
 
+	public static String getJson(Item item) throws Exception {
+
+		Map<String, Object> props = SimpleUtil.getProps(item);
+
+		String json = convertProps(props);
+
+		return json;
+
+	}
+
 	public static String getJson(AmazonSimpleDB client, String domain,
 			String item) throws Exception {
 
 		Map<String, Object> props = getProps(client, domain, item);
 
-		if (props.isEmpty()) {
-			return null;
-		}
-
-		String json = JSON.intoText(props);
+		String json = convertProps(props);
 
 		return json;
 
@@ -100,7 +142,7 @@ public class SimpleUtil {
 
 		Map<String, Object> props = getProps(client, domain, item);
 
-		T value = convert(props, klaz);
+		T value = convertProps(props, klaz);
 
 		return value;
 
@@ -112,7 +154,7 @@ public class SimpleUtil {
 
 		Map<String, Object> props = getProps(attributes);
 
-		T object = convert(props, klaz);
+		T object = convertProps(props, klaz);
 
 		return object;
 
@@ -147,6 +189,10 @@ public class SimpleUtil {
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getProps(List<Attribute> attributes)
 			throws Exception {
+
+		if (attributes.isEmpty()) {
+			return null;
+		}
 
 		Map<String, Object> props = new HashMap<String, Object>();
 
@@ -220,11 +266,10 @@ public class SimpleUtil {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void putJson(String json, AmazonSimpleDB client,
 			String domain, String item) throws Exception {
 
-		Map<String, Object> props = JSON.fromText(json, Map.class);
+		Map<String, Object> props = convertJson(json);
 
 		putProps(props, client, domain, item);
 
@@ -233,7 +278,7 @@ public class SimpleUtil {
 	public static void putObject(Object instance, AmazonSimpleDB client,
 			String domain, String item) throws Exception {
 
-		Map<String, Object> props = convert(instance);
+		Map<String, Object> props = convertInstance(instance);
 
 		putProps(props, client, domain, item);
 

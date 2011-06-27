@@ -10,13 +10,14 @@ import org.restlet.ext.simpledb.name.Name;
 import org.restlet.ext.simpledb.props.SDBProperties;
 import org.restlet.ext.simpledb.props.SDBPropertiesLoader;
 import org.restlet.ext.simpledb.props.SDBVolumesProperties;
-import org.restlet.ext.simpledb.resource.EntryRestlet;
-import org.restlet.ext.simpledb.resource.RootResource;
+import org.restlet.ext.simpledb.resource.VolumeEntryRestlet;
 import org.restlet.ext.simpledb.resource.VolumeMap;
-import org.restlet.ext.simpledb.resource.VolumeSR;
+import org.restlet.ext.simpledb.resource.VolumeSelectRestlet;
 import org.restlet.ext.simpledb.util.SimpleUtil;
 import org.restlet.ext.simpledb.util.VolumeUtil;
 import org.restlet.routing.Router;
+import org.restlet.routing.TemplateRoute;
+import org.restlet.routing.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +28,10 @@ public class VolumesApp extends Application {
 
 	private static final Logger log = LoggerFactory.getLogger(VolumesApp.class);
 
-	private final VolumeMap volumeMap = new VolumeMap();
+	private final VolumeMap volumes = new VolumeMap();
 
 	private final SDBProperties sdbProps;
-	private final AmazonSimpleDB sdbClient;
+	private final AmazonSimpleDB client;
 
 	public VolumesApp() {
 
@@ -38,7 +39,7 @@ public class VolumesApp extends Application {
 
 			sdbProps = SDBPropertiesLoader.load();
 
-			sdbClient = new AmazonSimpleDBClient(sdbProps);
+			client = new AmazonSimpleDBClient(sdbProps);
 
 			configureVolumes();
 
@@ -54,20 +55,20 @@ public class VolumesApp extends Application {
 		String propsItem = SDBVolumesProperties.ITEM_VOLUMES_PROPS;
 
 		SDBVolumesProperties props = SimpleUtil.getObject(//
-				sdbClient, domain, propsItem, SDBVolumesProperties.class);
+				client, domain, propsItem, SDBVolumesProperties.class);
 
 		log.debug("props : {}", props);
 
 		String prefix = props.getSearchPrefix();
 
-		List<VolumeBean> volumeList = SimpleUtil.findItems(sdbClient, domain,
+		List<VolumeBean> volumeList = SimpleUtil.findItems(client, domain,
 				prefix, VolumeBean.class);
 
 		for (Volume volume : volumeList) {
 			if (volume.isActive()) {
 				log.debug("volume : {}", volume);
-				VolumeUtil.makeDomains(sdbClient, volume);
-				volumeMap.put(volume.getUriId(), volume);
+				VolumeUtil.makeDomains(client, volume);
+				volumes.put(volume.getUriId(), volume);
 			}
 		}
 
@@ -78,11 +79,14 @@ public class VolumesApp extends Application {
 
 		Router router = new Router(getContext());
 
-		router.attach(Name.NONE, RootResource.class);
+		router.attach(Name.ENTRY, //
+				new VolumeEntryRestlet(getContext(), client, volumes));
 
-		router.attach(Name.VOLUME, VolumeSR.class);
-
-		router.attach(Name.ENTRY, new EntryRestlet(sdbClient, volumeMap));
+		TemplateRoute route = router.attach(Name.SELECT, //
+				new VolumeSelectRestlet(getContext(), client, volumes));
+		Variable var = new Variable();
+		var.setDecodingOnParse(true);
+		route.getTemplate().getVariables().put(Name.Id.SELECT, var);
 
 		return router;
 
