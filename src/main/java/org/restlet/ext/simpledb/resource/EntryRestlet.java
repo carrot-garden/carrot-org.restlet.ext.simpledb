@@ -22,12 +22,12 @@ public class EntryRestlet extends Restlet {
 	private static final Logger log = LoggerFactory
 			.getLogger(EntryRestlet.class);
 
-	private final AmazonSimpleDB sdbClient;
-	private final VolumeMap volumeMap;
+	private final AmazonSimpleDB client;
+	private final VolumeMap volumes;
 
 	public EntryRestlet(AmazonSimpleDB sdbClient, VolumeMap volumeMap) {
-		this.sdbClient = sdbClient;
-		this.volumeMap = volumeMap;
+		this.client = sdbClient;
+		this.volumes = volumeMap;
 	}
 
 	@Override
@@ -35,81 +35,100 @@ public class EntryRestlet extends Restlet {
 
 		super.handle(request, response);
 
-		Method method = request.getMethod();
-
-		if (method == Method.GET) {
-
-			try {
-
-				log.debug("get");
-
-				String volumeId = RestletUtil.getAttr(request, Name.Id.VOLUME);
-				if (volumeId == null) {
-					response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST,
-							"missing volume attribute");
-					return;
-				}
-
-				String entryId = RestletUtil.getAttr(request, Name.Id.ENTRY);
-				if (entryId == null) {
-					response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST,
-							"missing entry attribute");
-					return;
-				}
-
-				Volume volume = volumeMap.get(volumeId);
-				if (volume == null) {
-					response.setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE,
-							"volume not found / not active");
-					return;
-				}
-
-				String prefix = VolumeUtil.getPrefix(volume, entryId);
-
-				String domain = VolumeUtil.getDomain(volume, prefix);
-
-				String json = SimpleUtil.getJson(sdbClient, domain, entryId);
-				if (json == null) {
-					response.setStatus(Status.CLIENT_ERROR_NOT_FOUND,
-							"entry not found");
-					return;
-				}
-
-				MediaType mediaType = MediaType.APPLICATION_JSON;
-
-				response.setEntity(json, mediaType);
-
-				response.setStatus(Status.SUCCESS_OK);
-
-			} catch (Exception e) {
-
-				log.error("", e);
-
-				response.setStatus(Status.SERVER_ERROR_INTERNAL);
-			}
-
+		final String volumeId = RestletUtil.getAttr(request, Name.Id.VOLUME);
+		if (volumeId == null) {
+			response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST,
+					"missing volume attribute");
 			return;
-
 		}
 
-		if (method == Method.PUT) {
+		final String entry = RestletUtil.getAttr(request, Name.Id.ENTRY);
+		if (entry == null) {
+			response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST,
+					"missing entry attribute");
+			return;
+		}
 
-			log.debug("put");
+		final Volume volume = volumes.get(volumeId);
+		if (volume == null) {
+			response.setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE,
+					"volume not found / not active");
+			return;
+		}
 
-			Representation entity = request.getEntity();
+		final String prefix = VolumeUtil.getPrefix(volume, entry);
+		final String domain = VolumeUtil.getDomain(volume, prefix);
 
-			MediaType mediaType = entity.getMediaType();
+		final Method method = request.getMethod();
 
-			if (mediaType != MediaType.APPLICATION_JSON) {
-				response.setStatus(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE);
+		try {
+
+			if (method == Method.GET) {
+				doGet(request, response, domain, entry);
 				return;
 			}
 
-			return;
+			if (method == Method.PUT) {
+				doPut(request, response, domain, entry);
+				return;
+			}
 
+			if (method == Method.DELETE) {
+				doDelete(request, response, domain, entry);
+				return;
+			}
+
+			response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
+
+		} catch (Exception e) {
+
+			log.error("", e);
+
+			response.setStatus(Status.SERVER_ERROR_INTERNAL);
 		}
 
-		response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
+	}
+
+	protected void doGet(Request request, Response response, String domain,
+			String entry) throws Exception {
+
+		String json = SimpleUtil.getJson(client, domain, entry);
+		if (json == null) {
+			response.setStatus(Status.CLIENT_ERROR_NOT_FOUND, "entry not found");
+			return;
+		}
+
+		response.setEntity(json, MediaType.APPLICATION_JSON);
+
+		response.setStatus(Status.SUCCESS_OK);
+
+	}
+
+	protected void doPut(Request request, Response response, String domain,
+			String entry) throws Exception {
+
+		Representation entity = request.getEntity();
+
+		if (!MediaType.APPLICATION_JSON.isCompatible(entity.getMediaType())) {
+			response.setStatus(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE,
+					"expected type is json");
+			return;
+		}
+
+		String json = request.getEntityAsText();
+
+		SimpleUtil.putJson(json, client, domain, entry);
+
+		response.setStatus(Status.SUCCESS_OK);
+
+	}
+
+	protected void doDelete(Request request, Response response, String domain,
+			String entry) throws Exception {
+
+		SimpleUtil.putProps(null, client, domain, entry);
+
+		response.setStatus(Status.SUCCESS_OK);
 
 	}
 

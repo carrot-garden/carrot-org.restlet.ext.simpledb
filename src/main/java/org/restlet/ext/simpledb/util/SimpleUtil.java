@@ -24,7 +24,29 @@ import com.carrotgarden.utils.json.JSON;
 
 public class SimpleUtil {
 
-	public static List<Item> getItems(AmazonSimpleDB client, String domain,
+	public static <T> T convert(Map<String, Object> props, Class<T> klaz)
+			throws Exception {
+
+		ObjectMapper mapper = JSON.getInstance();
+
+		T value = mapper.convertValue(props, klaz);
+
+		return value;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Map<String, Object> convert(Object instance) throws Exception {
+
+		ObjectMapper mapper = JSON.getInstance();
+
+		Map<String, Object> props = mapper.convertValue(instance, Map.class);
+
+		return props;
+
+	}
+
+	public static List<Item> findItems(AmazonSimpleDB client, String domain,
 			String prefix) throws Exception {
 
 		String expression = "select * from " + name(domain)
@@ -42,10 +64,10 @@ public class SimpleUtil {
 
 	}
 
-	public static <T> List<T> getItems(AmazonSimpleDB client, String domain,
+	public static <T> List<T> findItems(AmazonSimpleDB client, String domain,
 			String prefix, Class<T> klaz) throws Exception {
 
-		List<Item> itemList = getItems(client, domain, prefix);
+		List<Item> itemList = findItems(client, domain, prefix);
 
 		List<T> objectList = new LinkedList<T>();
 
@@ -61,7 +83,7 @@ public class SimpleUtil {
 	public static String getJson(AmazonSimpleDB client, String domain,
 			String item) throws Exception {
 
-		Map<String, Object> props = getMap(client, domain, item);
+		Map<String, Object> props = getProps(client, domain, item);
 
 		if (props.isEmpty()) {
 			return null;
@@ -73,7 +95,30 @@ public class SimpleUtil {
 
 	}
 
-	public static Map<String, Object> getMap(AmazonSimpleDB client,
+	public static <T> T getObject(AmazonSimpleDB client, String domain,
+			String item, Class<T> klaz) throws Exception {
+
+		Map<String, Object> props = getProps(client, domain, item);
+
+		T value = convert(props, klaz);
+
+		return value;
+
+	}
+
+	public static <T> T getObject(Item item, Class<T> klaz) throws Exception {
+
+		List<Attribute> attributes = item.getAttributes();
+
+		Map<String, Object> props = getProps(attributes);
+
+		T object = convert(props, klaz);
+
+		return object;
+
+	}
+
+	public static Map<String, Object> getProps(AmazonSimpleDB client,
 			String domain, String item) throws Exception {
 
 		GetAttributesRequest request = new GetAttributesRequest(//
@@ -83,24 +128,24 @@ public class SimpleUtil {
 
 		List<Attribute> attributes = result.getAttributes();
 
-		Map<String, Object> props = getMap(attributes);
+		Map<String, Object> props = getProps(attributes);
 
 		return props;
 
 	}
 
-	public static Map<String, Object> getMap(Item item) throws Exception {
+	public static Map<String, Object> getProps(Item item) throws Exception {
 
 		List<Attribute> attributes = item.getAttributes();
 
-		Map<String, Object> props = getMap(attributes);
+		Map<String, Object> props = getProps(attributes);
 
 		return props;
 
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getMap(List<Attribute> attributes)
+	public static Map<String, Object> getProps(List<Attribute> attributes)
 			throws Exception {
 
 		Map<String, Object> props = new HashMap<String, Object>();
@@ -139,40 +184,6 @@ public class SimpleUtil {
 
 	}
 
-	public static <T> T getObject(AmazonSimpleDB client, String domain,
-			String item, Class<T> klaz) throws Exception {
-
-		Map<String, Object> props = getMap(client, domain, item);
-
-		T value = getObject(props, klaz);
-
-		return value;
-
-	}
-
-	public static <T> T getObject(Item item, Class<T> klaz) throws Exception {
-
-		List<Attribute> attributes = item.getAttributes();
-
-		Map<String, Object> props = getMap(attributes);
-
-		T object = getObject(props, klaz);
-
-		return object;
-
-	}
-
-	public static <T> T getObject(Map<String, Object> props, Class<T> klaz)
-			throws Exception {
-
-		ObjectMapper mapper = JSON.getInstance();
-
-		T value = mapper.convertValue(props, klaz);
-
-		return value;
-
-	}
-
 	public static void makeDomain(AmazonSimpleDB client, String domain)
 			throws Exception {
 
@@ -195,40 +206,6 @@ public class SimpleUtil {
 		return "`" + name + "`";
 	}
 
-	// http://docs.amazonwebservices.com/AmazonSimpleDB/2009-04-15/DeveloperGuide/index.html?QuotingRulesSelect.html
-	public static String value(String value) {
-		return "'" + value + "'";
-	}
-
-	public static void putMap(Map<String, Object> props, AmazonSimpleDB client,
-			String domain, String item) throws Exception {
-
-		if (props == null) {
-
-			List<Attribute> attributes = null;
-			UpdateCondition condition = null;
-
-			DeleteAttributesRequest request = new DeleteAttributesRequest(
-					domain, item, attributes, condition);
-
-			client.deleteAttributes(request);
-
-		} else {
-
-			List<ReplaceableAttribute> attributes = new LinkedList<ReplaceableAttribute>();
-			putMap(props, attributes);
-
-			UpdateCondition condition = null;
-
-			PutAttributesRequest request = new PutAttributesRequest(domain,
-					item, attributes, condition);
-
-			client.putAttributes(request);
-
-		}
-
-	}
-
 	public static void putEntry(String key, String value,
 			List<ReplaceableAttribute> attributes) {
 
@@ -236,14 +213,64 @@ public class SimpleUtil {
 
 		attrib.setName(key);
 		attrib.setValue(value);
+
 		attrib.setReplace(true); // XXX
 
 		attributes.add(attrib);
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public static void putJson(String json, AmazonSimpleDB client,
+			String domain, String item) throws Exception {
+
+		Map<String, Object> props = JSON.fromText(json, Map.class);
+
+		putProps(props, client, domain, item);
+
+	}
+
+	public static void putObject(Object instance, AmazonSimpleDB client,
+			String domain, String item) throws Exception {
+
+		Map<String, Object> props = convert(instance);
+
+		putProps(props, client, domain, item);
+
+	}
+
+	public static void putProps(Map<String, Object> props,
+			AmazonSimpleDB client, String domain, String item) throws Exception {
+
+		if (props == null) {
+
+			List<Attribute> attributes = null;
+			UpdateCondition condition = null;
+
+			DeleteAttributesRequest request = new DeleteAttributesRequest(//
+					domain, item, attributes, condition);
+
+			client.deleteAttributes(request);
+
+		} else {
+
+			List<ReplaceableAttribute> attributes = new LinkedList<ReplaceableAttribute>();
+
+			putProps(props, attributes);
+
+			UpdateCondition condition = null;
+
+			PutAttributesRequest request = new PutAttributesRequest(//
+					domain, item, attributes, condition);
+
+			client.putAttributes(request);
+
+		}
+
+	}
+
 	@SuppressWarnings({ "unchecked" })
-	public static void putMap(Map<String, Object> props,
+	public static void putProps(Map<String, Object> props,
 			List<ReplaceableAttribute> attributes) throws Exception {
 
 		for (Map.Entry<String, Object> entry : props.entrySet()) {
@@ -269,6 +296,11 @@ public class SimpleUtil {
 
 		}
 
+	}
+
+	// http://docs.amazonwebservices.com/AmazonSimpleDB/2009-04-15/DeveloperGuide/index.html?QuotingRulesSelect.html
+	public static String value(String value) {
+		return "'" + value + "'";
 	}
 
 }

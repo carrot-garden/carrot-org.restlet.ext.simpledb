@@ -60,7 +60,7 @@ public class VolumesApp extends Application {
 
 		String prefix = props.getSearchPrefix();
 
-		List<VolumeBean> volumeList = SimpleUtil.getItems(sdbClient, domain,
+		List<VolumeBean> volumeList = SimpleUtil.findItems(sdbClient, domain,
 				prefix, VolumeBean.class);
 
 		for (Volume volume : volumeList) {
