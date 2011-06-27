@@ -8,8 +8,8 @@ public class SDBVolumesProperties {
 
 	public static final String ITEM_VOLUMES_PROPS = "volumes.properties";
 
-	public static final String PROP_VOLUME = "volume.prefix";
-	public static final String PROP_SEPARATOR = "volume.separator";
+	public static final String PROP_VOLUME = "volume_prefix";
+	public static final String PROP_SEPARATOR = "name_separator";
 
 	//
 

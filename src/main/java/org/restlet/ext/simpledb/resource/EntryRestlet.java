@@ -10,7 +10,6 @@ import org.restlet.ext.simpledb.api.Volume;
 import org.restlet.ext.simpledb.name.Name;
 import org.restlet.ext.simpledb.util.RestletUtil;
 import org.restlet.ext.simpledb.util.SimpleUtil;
-import org.restlet.ext.simpledb.util.VolumeUtil;
 import org.restlet.representation.Representation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,8 +55,7 @@ public class EntryRestlet extends Restlet {
 			return;
 		}
 
-		final String prefix = VolumeUtil.getPrefix(volume, entry);
-		final String domain = VolumeUtil.getDomain(volume, prefix);
+		final String domain = volume.getDomainName(entry);
 
 		final Method method = request.getMethod();
 

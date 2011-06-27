@@ -38,6 +38,7 @@ public class TestPutRestlet {
 		emailList.add("andrei@eee.com");
 		emailList.add("andrei@fff.com");
 		emailList.add("andrei@111.com");
+		emailList.add("andrei@222.com");
 		account.setEmailList(emailList);
 
 		String json = JSON.intoText(account);

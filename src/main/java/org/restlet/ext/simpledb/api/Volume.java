@@ -2,11 +2,15 @@ package org.restlet.ext.simpledb.api;
 
 public interface Volume extends Domain {
 
-	String getDomainPrefix();
+	String getNameSeparator();
 
-	String getDomainSeparator();
+	String getDomainFormat();
 
 	int getDomainCount();
+
+	String getDomainName(int index);
+
+	String getDomainName(String entry);
 
 	boolean isActive();
 

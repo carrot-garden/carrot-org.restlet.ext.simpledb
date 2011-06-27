@@ -11,7 +11,7 @@ public class ShardUtil {
 		return getShardIndexJOATT(itemName, shardCount);
 	}
 
-	// XXX works but slow
+	// XXX works but slow (150 ns)
 	public static int getShardIndexJOATT(String itemName, int shardCount) {
 
 		if (shardCount <= 1) {
@@ -19,7 +19,7 @@ public class ShardUtil {
 		}
 
 		long shardRange = HASH_RANGE / shardCount;
-		long hash = hashCodeJOATT(itemName);
+		long hash = hashCodeJOATT_Char(itemName);
 		long absoluteHash = hash - HASH_MINIM;
 
 		return (int) (absoluteHash / shardRange);
@@ -27,7 +27,7 @@ public class ShardUtil {
 
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
 
-	public static int hashCodeJOATT(String text) {
+	public static int hashCodeJOATT_Byte(String text) {
 
 		int hash = 0;
 
@@ -35,6 +35,26 @@ public class ShardUtil {
 
 		for (byte b : array) {
 			hash += (b & 0xFF);
+			hash += (hash << 10);
+			hash ^= (hash >>> 6);
+		}
+
+		hash += (hash << 3);
+		hash ^= (hash >>> 11);
+		hash += (hash << 15);
+
+		return hash;
+
+	}
+
+	public static int hashCodeJOATT_Char(String text) {
+
+		int hash = 0;
+
+		char[] array = text.toCharArray();
+
+		for (char c : array) {
+			hash += c;
 			hash += (hash << 10);
 			hash ^= (hash >>> 6);
 		}
@@ -60,7 +80,7 @@ public class ShardUtil {
 		return hash;
 	}
 
-	// XXX fast but broken
+	// XXX fast but broken (80 ns)
 	public static int getShardIndexDJB2(String itemName, int shardCount) {
 
 		if (shardCount <= 1) {
