@@ -22,7 +22,7 @@
 	</repositories>
 
 	<properties>
-		<restletVersion>2.1-M4</restletVersion>
+		<restletVersion>2.1-M5</restletVersion>
 		<amazonVersion>1.2.1</amazonVersion>
 	</properties>
 

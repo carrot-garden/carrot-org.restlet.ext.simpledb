@@ -52,6 +52,8 @@ public class VolumeSelectRestlet extends VolumeBaseRestlet {
 
 		final Method method = request.getMethod();
 
+		log.debug("### attributes : {}", request.getAttributes());
+
 		try {
 
 			if (method == Method.GET) {
