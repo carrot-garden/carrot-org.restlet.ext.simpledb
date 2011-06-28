@@ -14,6 +14,7 @@ public class TestVolumesApp extends Component {
 	//
 
 	static final int PORT = 8181;
+	static final int PORT_SSL = 8182;
 
 	//
 
@@ -44,6 +45,11 @@ public class TestVolumesApp extends Component {
 
 		Server serverHTTP = getServers().add(Protocol.HTTP, PORT);
 		serverHTTP.getContext().getParameters().set("tracing", "true");
+
+		// Server serverHTTPS = getServers().add(Protocol.HTTPS, PORT_SSL);
+		// serverHTTPS.getContext().getParameters().set("tracing", "true");
+
+		//
 
 		VolumesApp app = new VolumesApp();
 

@@ -43,6 +43,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.restlet.jse</groupId>
+			<artifactId>org.restlet.ext.ssl</artifactId>
+			<version>${restletVersion}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
 			<version>${amazonVersion}</version>
