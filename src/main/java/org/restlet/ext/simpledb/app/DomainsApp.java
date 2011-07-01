@@ -3,12 +3,11 @@ package org.restlet.ext.simpledb.app;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.ext.simpledb.name.Name;
+import org.restlet.ext.simpledb.props.SDBProperties;
+import org.restlet.ext.simpledb.props.SDBPropertiesLoader;
 import org.restlet.ext.simpledb.resource.RootResource;
 import org.restlet.routing.Router;
 
-import bench.auth.AWSCredentialsLoader;
-
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 
@@ -19,7 +18,7 @@ public class DomainsApp extends Application {
 	public DomainsApp() {
 
 		try {
-			AWSCredentials creds = AWSCredentialsLoader.load();
+			SDBProperties creds = SDBPropertiesLoader.load();
 			sdb = new AmazonSimpleDBClient(creds);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
