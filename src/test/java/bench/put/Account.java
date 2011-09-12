@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.carrotgarden.utils.json.JSON;
+import com.carrotgarden.util.json.JSON;
 
 public class Account {
 

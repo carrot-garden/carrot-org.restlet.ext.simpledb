@@ -3,7 +3,6 @@ package org.restlet.ext.simpledb.util;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,7 +13,6 @@ import org.restlet.ext.simpledb.api.Volume;
 
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.model.Item;
-import com.carrotgarden.utils.json.JSON;
 
 public class VolumeUtil {
 

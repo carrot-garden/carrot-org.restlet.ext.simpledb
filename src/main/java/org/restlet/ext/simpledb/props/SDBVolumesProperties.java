@@ -2,7 +2,7 @@ package org.restlet.ext.simpledb.props;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.carrotgarden.utils.json.JSON;
+import com.carrotgarden.util.json.JSON;
 
 public class SDBVolumesProperties {
 

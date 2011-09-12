@@ -20,7 +20,7 @@ import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.amazonaws.services.simpledb.model.SelectRequest;
 import com.amazonaws.services.simpledb.model.SelectResult;
 import com.amazonaws.services.simpledb.model.UpdateCondition;
-import com.carrotgarden.utils.json.JSON;
+import com.carrotgarden.util.json.JSON;
 
 public class SimpleUtil {
 

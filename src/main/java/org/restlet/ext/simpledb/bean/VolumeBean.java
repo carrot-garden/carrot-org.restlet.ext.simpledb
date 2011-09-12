@@ -4,7 +4,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.restlet.ext.simpledb.api.Volume;
 import org.restlet.ext.simpledb.util.ShardUtil;
 
-import com.carrotgarden.utils.json.JSON;
+import com.carrotgarden.util.json.JSON;
 
 public class VolumeBean extends DomainBean implements Volume {
 

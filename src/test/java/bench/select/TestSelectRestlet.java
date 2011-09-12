@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import bench.put.Account;
 
-import com.carrotgarden.utils.json.JSON;
+import com.carrotgarden.util.json.JSON;
 
 public class TestSelectRestlet {
 

@@ -14,7 +14,7 @@ import org.restlet.ext.simpledb.util.RestletUtil;
 import org.restlet.ext.simpledb.util.VolumeUtil;
 
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
-import com.carrotgarden.utils.json.JSON;
+import com.carrotgarden.util.json.JSON;
 
 public class VolumeSelectRestlet extends VolumeBaseRestlet {
 
