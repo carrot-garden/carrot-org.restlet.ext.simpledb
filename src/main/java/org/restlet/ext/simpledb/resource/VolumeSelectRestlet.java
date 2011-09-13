@@ -10,6 +10,7 @@ import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.simpledb.api.Volume;
 import org.restlet.ext.simpledb.name.Name;
+import org.restlet.ext.simpledb.util.Props;
 import org.restlet.ext.simpledb.util.RestletUtil;
 import org.restlet.ext.simpledb.util.VolumeUtil;
 
@@ -18,14 +19,15 @@ import com.carrotgarden.util.json.JSON;
 
 public class VolumeSelectRestlet extends VolumeBaseRestlet {
 
-	public VolumeSelectRestlet(Context rstContex, AmazonSimpleDB sdbClient,
-			VolumeMap volumeMap) {
+	public VolumeSelectRestlet(final Context rstContex,
+			final AmazonSimpleDB sdbClient, final VolumeMap volumeMap) {
+
 		super(rstContex, sdbClient, volumeMap);
 
 	}
 
 	@Override
-	public void handle(Request request, Response response) {
+	public void handle(final Request request, final Response response) {
 
 		super.handle(request, response);
 
@@ -72,12 +74,13 @@ public class VolumeSelectRestlet extends VolumeBaseRestlet {
 
 	}
 
-	protected void doGet(Request request, Response response, Volume volume,
-			String select) throws Exception {
+	protected void doGet(final Request request, final Response response,
+			final Volume volume, final String select) throws Exception {
 
-		List<String> result = VolumeUtil.selectItems(client, volume, select);
+		final List<Props> result = VolumeUtil//
+				.selectItems(client, volume, select);
 
-		String json = JSON.intoText(result);
+		final String json = JSON.intoText(result);
 
 		response.setEntity(json, MediaType.APPLICATION_JSON);
 

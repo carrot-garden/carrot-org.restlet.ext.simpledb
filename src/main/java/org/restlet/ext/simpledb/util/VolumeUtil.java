@@ -50,29 +50,29 @@ public class VolumeUtil {
 
 	}
 
-	public static List<String> selectItems(final AmazonSimpleDB client,
+	public static List<Props> selectItems(final AmazonSimpleDB client,
 			final Volume volume, final String select) throws Exception {
 
-		final Collection<Callable<List<String>>> taskList = new LinkedList<Callable<List<String>>>();
+		final Collection<Callable<List<Props>>> taskList = new LinkedList<Callable<List<Props>>>();
 
 		for (int index = 0; index < volume.getDomainCount(); index++) {
 
 			final int domainIndex = index;
 
-			final Callable<List<String>> task = new Callable<List<String>>() {
+			final Callable<List<Props>> task = new Callable<List<Props>>() {
 				@Override
-				public List<String> call() throws Exception {
+				public List<Props> call() throws Exception {
 
-					String domain = volume.getDomainName(domainIndex);
+					final String domain = volume.getDomainName(domainIndex);
 
-					List<Item> itemList = SimpleUtil.selectItems(client,
-							domain, select);
+					final List<Item> itemList = SimpleUtil//
+							.selectItems(client, domain, select);
 
-					List<String> jsonList = new LinkedList<String>();
+					final List<Props> jsonList = new LinkedList<Props>();
 
-					for (Item item : itemList) {
-						String json = SimpleUtil.getJson(item);
-						jsonList.add(json);
+					for (final Item item : itemList) {
+						Props props = SimpleUtil.getProps(item);
+						jsonList.add(props);
 					}
 
 					return jsonList;
@@ -83,13 +83,13 @@ public class VolumeUtil {
 
 		}
 
-		final List<Future<List<String>>> futureList = getExecutor().invokeAll(
+		final List<Future<List<Props>>> futureList = getExecutor().invokeAll(
 				taskList);
 
-		final List<String> jsonList = new LinkedList<String>();
+		final List<Props> jsonList = new LinkedList<Props>();
 
-		for (Future<List<String>> future : futureList) {
-			List<String> list = future.get();
+		for (final Future<List<Props>> future : futureList) {
+			final List<Props> list = future.get();
 			jsonList.addAll(list);
 
 		}

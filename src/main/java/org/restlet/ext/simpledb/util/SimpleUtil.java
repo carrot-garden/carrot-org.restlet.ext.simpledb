@@ -1,6 +1,5 @@
 package org.restlet.ext.simpledb.util;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,7 @@ import com.carrotgarden.util.json.JSON;
 
 public class SimpleUtil {
 
-	public static String convertProps(Map<String, Object> props)
-			throws Exception {
+	public static String convertProps(Props props) throws Exception {
 
 		if (props == null) {
 			return null;
@@ -37,7 +35,7 @@ public class SimpleUtil {
 
 	}
 
-	public static <T> T convertProps(Map<String, Object> props, Class<T> klaz)
+	public static <T> T convertProps(Props props, Class<T> klaz)
 			throws Exception {
 
 		if (props == null) {
@@ -52,8 +50,7 @@ public class SimpleUtil {
 
 	}
 
-	public static Map<String, Object> convertInstance(Object instance)
-			throws Exception {
+	public static Props convertInstance(Object instance) throws Exception {
 
 		if (instance == null) {
 			return null;
@@ -62,52 +59,54 @@ public class SimpleUtil {
 		ObjectMapper mapper = JSON.getInstance();
 
 		@SuppressWarnings("unchecked")
-		Map<String, Object> props = mapper.convertValue(instance, Map.class);
+		Props props = mapper.convertValue(instance, Props.class);
 
 		return props;
 
 	}
 
-	public static Map<String, Object> convertJson(String json) throws Exception {
+	public static Props convertJson(String json) throws Exception {
 
 		if (json == null) {
 			return null;
 		}
 
 		@SuppressWarnings("unchecked")
-		Map<String, Object> props = JSON.fromText(json, Map.class);
+		Props props = JSON.fromText(json, Props.class);
 
 		return props;
 
 	}
 
-	public static List<Item> selectItems(AmazonSimpleDB client, String domain,
-			String select) throws Exception {
+	public static List<Item> selectItems(final AmazonSimpleDB client,
+			final String domain, final String select) throws Exception {
 
-		String expression = "select * from " + name(domain) + " " + select;
+		final String expression = "select * from " + name(domain) + " "
+				+ select;
 
-		SelectRequest request = new SelectRequest(expression)
+		final SelectRequest request = new SelectRequest(expression)
 				.withConsistentRead(true);
 
-		SelectResult result = client.select(request);
+		final SelectResult result = client.select(request);
 
-		List<Item> itemList = result.getItems();
+		final List<Item> itemList = result.getItems();
 
 		return itemList;
 
 	}
 
-	public static <T> List<T> findItems(AmazonSimpleDB client, String domain,
-			String prefix, Class<T> klaz) throws Exception {
+	public static <T> List<T> findItems(final AmazonSimpleDB client,
+			final String domain, final String prefix, final Class<T> klaz)
+			throws Exception {
 
-		String select = //
+		final String select = //
 		"where itemName() like " + value(prefix + "%") + " limit 2500";
 
-		List<Item> itemList = selectItems(client, domain, select);
+		final List<Item> itemList = selectItems(client, domain, select);
 
-		List<T> objectList = new LinkedList<T>();
+		final List<T> objectList = new LinkedList<T>();
 
-		for (Item item : itemList) {
+		for (final Item item : itemList) {
 			T object = getObject(item, klaz);
 			objectList.add(object);
 		}
@@ -118,7 +117,7 @@ public class SimpleUtil {
 
 	public static String getJson(Item item) throws Exception {
 
-		Map<String, Object> props = SimpleUtil.getProps(item);
+		Props props = SimpleUtil.getProps(item);
 
 		String json = convertProps(props);
 
@@ -129,7 +128,7 @@ public class SimpleUtil {
 	public static String getJson(AmazonSimpleDB client, String domain,
 			String item) throws Exception {
 
-		Map<String, Object> props = getProps(client, domain, item);
+		Props props = getProps(client, domain, item);
 
 		String json = convertProps(props);
 
@@ -140,7 +139,7 @@ public class SimpleUtil {
 	public static <T> T getObject(AmazonSimpleDB client, String domain,
 			String item, Class<T> klaz) throws Exception {
 
-		Map<String, Object> props = getProps(client, domain, item);
+		Props props = getProps(client, domain, item);
 
 		T value = convertProps(props, klaz);
 
@@ -152,7 +151,7 @@ public class SimpleUtil {
 
 		List<Attribute> attributes = item.getAttributes();
 
-		Map<String, Object> props = getProps(attributes);
+		Props props = getProps(attributes);
 
 		T object = convertProps(props, klaz);
 
@@ -160,8 +159,8 @@ public class SimpleUtil {
 
 	}
 
-	public static Map<String, Object> getProps(AmazonSimpleDB client,
-			String domain, String item) throws Exception {
+	public static Props getProps(AmazonSimpleDB client, String domain,
+			String item) throws Exception {
 
 		GetAttributesRequest request = new GetAttributesRequest(//
 				domain, item).withConsistentRead(true);
@@ -170,38 +169,38 @@ public class SimpleUtil {
 
 		List<Attribute> attributes = result.getAttributes();
 
-		Map<String, Object> props = getProps(attributes);
+		Props props = getProps(attributes);
 
 		return props;
 
 	}
 
-	public static Map<String, Object> getProps(Item item) throws Exception {
+	public static Props getProps(final Item item) throws Exception {
 
-		List<Attribute> attributes = item.getAttributes();
+		final List<Attribute> attributes = item.getAttributes();
 
-		Map<String, Object> props = getProps(attributes);
+		final Props props = getProps(attributes);
 
 		return props;
 
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getProps(List<Attribute> attributes)
+	public static Props getProps(final List<Attribute> attributes)
 			throws Exception {
 
 		if (attributes.isEmpty()) {
 			return null;
 		}
 
-		Map<String, Object> props = new HashMap<String, Object>();
+		final Props props = new Props();
 
-		for (Attribute attrib : attributes) {
+		for (final Attribute attrib : attributes) {
 
-			String key = attrib.getName();
-			String value = attrib.getValue();
+			final String key = attrib.getName();
+			final String value = attrib.getValue();
 
-			Object stored = props.get(key);
+			final Object stored = props.get(key);
 
 			if (stored == null) {
 				props.put(key, value);

@@ -77,16 +77,19 @@ public class VolumesApp extends Application {
 	@Override
 	public Restlet createInboundRoot() {
 
-		Router router = new Router(getContext());
+		final Router router = new Router(getContext());
 
-		router.attach(Name.ENTRY, //
+		final TemplateRoute routeEntry = router.attach(Name.ENTRY, //
 				new VolumeEntryRestlet(getContext(), client, volumes));
 
-		TemplateRoute route = router.attach(Name.SELECT, //
+		final TemplateRoute routeSelect = router.attach(Name.SELECT, //
 				new VolumeSelectRestlet(getContext(), client, volumes));
-		Variable var = new Variable();
+
+		final Variable var = new Variable();
+
 		var.setDecodingOnParse(true);
-		route.getTemplate().getVariables().put(Name.Id.SELECT, var);
+
+		routeSelect.getTemplate().getVariables().put(Name.Id.SELECT, var);
 
 		return router;
 
