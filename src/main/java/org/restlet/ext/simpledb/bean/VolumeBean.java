@@ -60,18 +60,26 @@ public class VolumeBean extends DomainBean implements Volume {
 	private String[] domainNames;
 
 	@Override
-	public String getDomainName(int index) {
+	public String getDomainName(final int index) {
+
 		if (index < 0 || index >= domainCount) {
 			return "invalid-domain-index";
 		}
+
 		if (domainNames == null) {
-			String[] namesArray = new String[domainCount];
+
+			final String[] namesArray = new String[domainCount];
+
 			for (int k = 0; k < domainCount; k++) {
 				namesArray[k] = String.format(domainFormat, k);
 			}
+
 			domainNames = namesArray;
+
 		}
+
 		return domainNames[index];
+
 	}
 
 	private String getEntryPrefix(final String entry) {
