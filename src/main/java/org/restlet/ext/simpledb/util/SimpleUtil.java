@@ -200,11 +200,13 @@ public class SimpleUtil {
 
 			final Object stored = props.get(key);
 
+			/* first insert - save as string */
 			if (stored == null) {
 				props.put(key, value);
 				continue;
 			}
 
+			/* second insert - convert to list */
 			if (stored instanceof String) {
 				List<String> list = new LinkedList<String>();
 				list.add((String) stored);
@@ -213,6 +215,7 @@ public class SimpleUtil {
 				continue;
 			}
 
+			/* third insert - keep adding to list */
 			if (stored instanceof List) {
 				List<String> list = (List<String>) stored;
 				list.add(value);
