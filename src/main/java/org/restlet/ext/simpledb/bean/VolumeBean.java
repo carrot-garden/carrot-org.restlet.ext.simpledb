@@ -74,27 +74,36 @@ public class VolumeBean extends DomainBean implements Volume {
 		return domainNames[index];
 	}
 
-	// @Override
-	private String getEntryPrefix(String entry) {
+	private String getEntryPrefix(final String entry) {
 
-		int index = entry.indexOf(nameSeparator);
+		final int separatorIndex = entry.indexOf(nameSeparator);
 
-		if (index <= 0) {
+		if (separatorIndex <= 0) {
 			return entry;
 		} else {
-			return entry.substring(index);
+			return entry.substring(0, separatorIndex);
 		}
 
 	}
 
 	@Override
-	public String getDomainName(String entry) {
+	public String getDomainName(final String entry) {
 
-		String prefix = getEntryPrefix(entry);
+		final int shardIndex;
 
-		int index = ShardUtil.getShardIndex(prefix, domainCount);
+		if (entry == null) {
 
-		return getDomainName(index);
+			shardIndex = 0;
+
+		} else {
+
+			final String prefix = getEntryPrefix(entry);
+
+			shardIndex = ShardUtil.getShardIndex(prefix, domainCount);
+
+		}
+
+		return getDomainName(shardIndex);
 
 	}
 
