@@ -23,7 +23,7 @@ public class VolumeEntryRestlet extends VolumeBaseRestlet {
 	}
 
 	@Override
-	public void handle(Request request, Response response) {
+	public void handle(final Request request, final Response response) {
 
 		super.handle(request, response);
 
@@ -80,10 +80,11 @@ public class VolumeEntryRestlet extends VolumeBaseRestlet {
 
 	}
 
-	protected void doGet(Request request, Response response, String domain,
-			String entry) throws Exception {
+	protected void doGet(final Request request, final Response response,
+			final String domain, final String entry) throws Exception {
 
-		String json = SimpleUtil.getJson(client, domain, entry);
+		final String json = SimpleUtil.getJson(client, domain, entry);
+
 		if (json == null) {
 			response.setStatus(Status.CLIENT_ERROR_NOT_FOUND, "entry not found");
 			return;
@@ -95,10 +96,10 @@ public class VolumeEntryRestlet extends VolumeBaseRestlet {
 
 	}
 
-	protected void doPut(Request request, Response response, String domain,
-			String entry) throws Exception {
+	protected void doPut(final Request request, final Response response,
+			final String domain, final String entry) throws Exception {
 
-		Representation entity = request.getEntity();
+		final Representation entity = request.getEntity();
 
 		if (!MediaType.APPLICATION_JSON.isCompatible(entity.getMediaType())) {
 			response.setStatus(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE,
@@ -106,7 +107,7 @@ public class VolumeEntryRestlet extends VolumeBaseRestlet {
 			return;
 		}
 
-		String json = request.getEntityAsText();
+		final String json = request.getEntityAsText();
 
 		SimpleUtil.putJson(json, client, domain, entry);
 
@@ -114,8 +115,8 @@ public class VolumeEntryRestlet extends VolumeBaseRestlet {
 
 	}
 
-	protected void doDelete(Request request, Response response, String domain,
-			String entry) throws Exception {
+	protected void doDelete(final Request request, final Response response,
+			final String domain, final String entry) throws Exception {
 
 		SimpleUtil.putProps(null, client, domain, entry);
 
