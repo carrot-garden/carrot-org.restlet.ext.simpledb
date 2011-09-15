@@ -41,7 +41,7 @@ public interface Name {
 	String ENTRIES = //
 	"/volumes/{volume}/entries";
 
-	/* {entry} == prefixId|nnnnnnId */
+	/* {entry} == prefixId,aaaId,bbbId,cccId */
 	String ENTRY = //
 	"/volumes/{volume}/entries/{entry}";
 
