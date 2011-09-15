@@ -58,7 +58,6 @@ public class SimpleUtil {
 
 		ObjectMapper mapper = JSON.getInstance();
 
-		@SuppressWarnings("unchecked")
 		Props props = mapper.convertValue(instance, Props.class);
 
 		return props;
@@ -71,7 +70,6 @@ public class SimpleUtil {
 			return null;
 		}
 
-		@SuppressWarnings("unchecked")
 		Props props = JSON.fromText(json, Props.class);
 
 		return props;
@@ -313,30 +311,48 @@ public class SimpleUtil {
 
 	}
 
+	public static boolean isPrimitive(final Object value) {
+		if (value instanceof String) {
+			return true;
+		}
+		if (value instanceof Number) {
+			return true;
+		}
+		if (value instanceof Boolean) {
+			return true;
+		}
+		return false;
+	}
+
 	@SuppressWarnings({ "unchecked" })
-	public static void putProps(Map<String, Object> props,
-			List<ReplaceableAttribute> attributes) throws Exception {
+	public static void putProps(final Map<String, Object> props,
+			final List<ReplaceableAttribute> attributes) throws Exception {
 
-		for (Map.Entry<String, Object> entry : props.entrySet()) {
+		for (final Map.Entry<String, Object> entry : props.entrySet()) {
 
-			String key = entry.getKey();
-			Object stored = entry.getValue();
+			final String key = entry.getKey();
+			final Object stored = entry.getValue();
 
-			if (stored instanceof String) {
-				String value = (String) stored;
+			if (isPrimitive(stored)) {
+				final String value = stored.toString();
 				putEntry(key, value, attributes);
 				continue;
 			}
 
 			if (stored instanceof List) {
-				List<String> list = (List<String>) stored;
-				for (String value : list) {
-					putEntry(key, value, attributes);
+				final List<Object> list = (List<Object>) stored;
+				for (final Object item : list) {
+					if (isPrimitive(item)) {
+						final String value = item.toString();
+						putEntry(key, value, attributes);
+					} else {
+						throw new Exception("unknown item type : " + item);
+					}
 				}
 				continue;
 			}
 
-			throw new Exception("unexpected value type : " + stored);
+			throw new Exception("unknown stored type : " + stored);
 
 		}
 
