@@ -29,6 +29,13 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.8.6</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>com.carrotgarden</groupId>
 			<artifactId>carrot-util-json</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
