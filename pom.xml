@@ -22,8 +22,12 @@
 	</repositories>
 
 	<properties>
+	
+		<carrotJavaVersion>1.6</carrotJavaVersion>
+	
 		<restletVersion>2.1-M7</restletVersion>
 		<amazonVersion>1.2.7</amazonVersion>
+		
 	</properties>
 
 	<dependencies>
